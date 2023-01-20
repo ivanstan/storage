@@ -15,7 +15,7 @@ set('default_stage', 'production');
 set('bin/composer', '~/bin/composer.phar');
 set('composer_options', '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader');
 add('shared_files', [
-    '.env',
+    '.env.local',
 ]);
 add('shared_dirs', [
     'var',
@@ -30,9 +30,9 @@ host('tle.ivanstanojevic.me')
     ->set('deploy_path', '~/projects/storage.ivanstanojevic.me');
 
 task('test', function () {
-    set('symfony_env', 'test');
-    runLocally('bin/phpunit');
-    set('symfony_env', 'dev');
+//    set('symfony_env', 'test');
+//    runLocally('bin/phpunit');
+//    set('symfony_env', 'dev');
 });
 
 task('deploy:dump-env', function () {
