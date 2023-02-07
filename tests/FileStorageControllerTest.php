@@ -7,31 +7,40 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileStorageControllerTest extends WebTestCase
 {
+    use ApiTestProvider;
+
     public function testFileUpload(): void
     {
-        $file = new UploadedFile(
-            __DIR__ . '/data/file.txt',
-            'file.txt'
-        );
-
-        $server = [
-            'PHP_AUTH_USER' => 'system',
-            'PHP_AUTH_PW' => 'system',
-        ];
-
-        $client = static::createClient([], $server);
-
-        $client->request('POST', '/storage/upload', [], [
-            'file[]' => $file,
+        $response =  $this->request('POST', '/storage/upload', [], [
+            'file[1]' => $this->getFile(self::FILE1),
+            'file[2]' => $this->getFile(self::FILE2),
         ]);
 
         self::assertResponseIsSuccessful();
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        self::assertFileExists(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');
+        self::assertEquals('file1.txt', $response[0]['name']);
+        self::assertEquals(18, $response[0]['size']);
+        self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
 
-        self::assertFileExists(__DIR__ . '/../public/data/' . $response['id'] . '.txt');
-        self::assertEquals('file.txt', $response['file']);
-        self::assertEquals(0, $response['size']);
-        self::assertEquals('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', $response['sha256']);
+        self::assertFileExists(__DIR__ . '/../public/data/' . $response[1]['id'] . '.txt');
+        self::assertEquals('file2.txt', $response[1]['name']);
+        self::assertEquals(18, $response[1]['size']);
+        self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
+    }
+
+    /**
+     * @depends testFileUpload
+     */
+    public function testUploadExistingFile(): void
+    {
+        $response = $this->request('POST', '/storage/upload', [], [
+            'file[1]' => $this->getFile(self::FILE1),
+        ]);
+
+        self::assertFileExists(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');
+        self::assertEquals('file1.txt', $response[0]['name']);
+        self::assertEquals(18, $response[0]['size']);
+        self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
     }
 }
