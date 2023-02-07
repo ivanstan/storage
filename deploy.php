@@ -56,7 +56,7 @@ task(
         'deploy:shared',
         'deploy:assets',
         'deploy:writable',
-        'deploy:vendors',
+//        'deploy:vendors',
         'deploy:executable',
 //        'deploy:cache:clear',
 //        'deploy:cache:warmup',
