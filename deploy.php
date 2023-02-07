@@ -12,13 +12,11 @@ set('bin_dir', 'bin');
 set('http_user', 'glutenfr');
 set('writable_mode', 'chmod');
 set('default_stage', 'production');
-set('bin/composer', '~/bin/composer.phar');
 set('composer_options', '{{composer_action}} --verbose --prefer-dist --no-progress --no-interaction --optimize-autoloader');
 add('shared_files', [
     '.env.local',
 ]);
 add('shared_dirs', [
-    'var',
     'public/data',
 ]);
 add('writable_dirs', ['var', 'public/data']);
@@ -30,9 +28,9 @@ host('tle.ivanstanojevic.me')
     ->set('deploy_path', '~/projects/storage.ivanstanojevic.me');
 
 task('test', function () {
-//    set('symfony_env', 'test');
-//    runLocally('bin/phpunit');
-//    set('symfony_env', 'dev');
+    set('symfony_env', 'test');
+    runLocally('bin/phpunit');
+    set('symfony_env', 'dev');
 });
 
 task('deploy:dump-env', function () {
@@ -56,12 +54,12 @@ task(
         'deploy:shared',
         'deploy:assets',
         'deploy:writable',
-//        'deploy:vendors',
+        'deploy:vendors',
         'deploy:executable',
-//        'deploy:cache:clear',
-//        'deploy:cache:warmup',
-//        'deploy:dump-env',
-//        'database:migrate',
+        'deploy:cache:clear',
+        'deploy:cache:warmup',
+        'deploy:dump-env',
+        'database:migrate',
         'deploy:symlink',
         'deploy:unlock',
         'cleanup',
