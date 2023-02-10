@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -10,6 +10,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "ivanstan/symfony-support": "dev-master",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
@@ -19,8 +20,11 @@
         "symfony/runtime": "6.2.*",
         "symfony/security-bundle": "6.2.*",
         "symfony/serializer": "6.2.*",
+        "symfony/twig-bundle": "6.2.*",
         "symfony/uid": "6.2.*",
-        "symfony/yaml": "6.2.*"
+        "symfony/yaml": "6.2.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.0",
