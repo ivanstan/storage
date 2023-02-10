@@ -1,4 +1,0 @@
-symfony_support:
-  exception_subscriber:
-    paths:
-      - /
