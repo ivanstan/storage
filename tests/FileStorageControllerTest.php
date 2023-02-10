@@ -11,9 +11,11 @@ class FileStorageControllerTest extends WebTestCase
 
     public function testFileUpload(): void
     {
-        $response =  $this->request('POST', '/storage/upload', [], [
-            'file[1]' => $this->getFile(self::FILE1),
-            'file[2]' => $this->getFile(self::FILE2),
+        $response = $this->request('POST', '/storage/upload', [], [
+            'file' => [
+                $this->getFile(self::FILE1),
+                $this->getFile(self::FILE2)
+            ]
         ]);
 
         self::assertResponseIsSuccessful();
@@ -35,7 +37,7 @@ class FileStorageControllerTest extends WebTestCase
     public function testUploadExistingFile(): void
     {
         $response = $this->request('POST', '/storage/upload', [], [
-            'file[1]' => $this->getFile(self::FILE1),
+            'file' => [$this->getFile(self::FILE1)],
         ]);
 
         self::assertFileExists(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');

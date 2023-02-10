@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +31,7 @@ class FileStorageController extends AbstractController
         $entities = [];
 
         /** @var UploadedFile $file */
-        foreach ($request->files as $file) {
+        foreach ($request->files->get('file') as $file) {
             $source = $file->getFileInfo()->getPathname();
 
             if ($existing = $repository->findOneBySha256(hash_file('sha256', $source))) {
