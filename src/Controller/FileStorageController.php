@@ -6,6 +6,7 @@ use App\Entity\File;
 use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Ivanstan\SymfonySupport\Services\QueryBuilderPaginator;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Uid\Uuid;
+use OpenApi\Attributes as OA;
 
 #[Route('/api/file')]
 class FileStorageController extends AbstractController
@@ -28,7 +30,21 @@ class FileStorageController extends AbstractController
     {
     }
 
+    #[Route('s', name: 'file_storage_index', methods: 'GET')]
+    #[OA\Get(tags: ['File'])]
+    public function index(): JsonResponse
+    {
+        $pagination = new QueryBuilderPaginator($this->repository->search());
+
+        return $this->json($this->normalizer->normalize($pagination));
+    }
+
     #[Route('/upload', name: 'file_storage_upload', methods: 'POST')]
+    #[OA\Post(tags: ['File'])]
+    #[OA\Parameter(
+        name: 'file',
+        required: true,
+    )]
     public function upload(Request $request): JsonResponse
     {
         $entities = [];
@@ -56,15 +72,8 @@ class FileStorageController extends AbstractController
         return new JsonResponse($this->normalizer->normalize($entities));
     }
 
-    #[Route('s', name: 'file_storage_index', methods: 'GET')]
-    public function index(): JsonResponse
-    {
-        $pagination = new QueryBuilderPaginator($this->repository->search());
-
-        return $this->json($this->normalizer->normalize($pagination));
-    }
-
     #[Route('/{file}/delete', name: 'file_storage_delete', methods: 'DELETE')]
+    #[OA\Delete(tags: ['File'])]
     public function delete(File $file): JsonResponse
     {
         $this->repository->remove($file, true);

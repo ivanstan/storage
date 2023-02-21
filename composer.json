@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
         "ivanstan/symfony-support": "dev-master",
+        "nelmio/api-doc-bundle": "^4.11",
         "symfony/apache-pack": "^1.0",
         "symfony/console": "6.2.*",
         "symfony/dotenv": "6.2.*",
@@ -81,7 +82,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "6.2.*"
         }
     }
