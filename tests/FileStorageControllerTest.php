@@ -9,7 +9,7 @@ class FileStorageControllerTest extends WebTestCase
 {
     use ApiTestProvider;
 
-    public function testFileUpload(): void
+    public function testUpload(): void
     {
         $response = $this->request('POST', '/api/file/upload', [], [
             'file' => [
@@ -32,9 +32,9 @@ class FileStorageControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testFileUpload
+     * @depends testUpload
      */
-    public function testUploadExistingFile(): array
+    public function testUploadExisting(): array
     {
         $response = $this->request('POST', '/api/file/upload', [], [
             'file' => [$this->getFile(self::FILE1)],
@@ -49,13 +49,27 @@ class FileStorageControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testUploadExistingFile
+     * @depends testUploadExisting
+     */
+    public function testSearch(): array
+    {
+        $response = $this->request('GET', '/api/files');
+
+        self::assertEquals(2, $response['totalItems']);
+
+        return $response;
+    }
+
+    /**
+     * @depends testSearch
      */
     public function testDelete(array $response): void
     {
-        $this->request('DELETE', '/api/file/' . $response[0]['id'] . '/delete');
+        foreach ($response['member'] as $item) {
+            $this->request('DELETE', '/api/file/' . $item['id'] . '/delete');
 
-        self::assertEquals(Response::HTTP_ACCEPTED, $this->client->getResponse()->getStatusCode());
-        self::assertFileDoesNotExist(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');
+            self::assertEquals(Response::HTTP_ACCEPTED, $this->client->getResponse()->getStatusCode());
+            self::assertFileDoesNotExist(__DIR__ . '/../public/data/' . $item['id'] . '.txt');
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,12 @@ class FileRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function search(): QueryBuilder
+    {
+        return $this->createQueryBuilder('f')
+            ->orderBy('f.created_at', 'DESC');
     }
 
     public function findOneBySha256($value): ?File

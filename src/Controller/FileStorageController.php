@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\File;
 use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Ivanstan\SymfonySupport\Services\QueryBuilderPaginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,11 +20,12 @@ use Symfony\Component\Uid\Uuid;
 class FileStorageController extends AbstractController
 {
     public function __construct(
-        protected string $publicDir,
+        protected string                 $publicDir,
         protected EntityManagerInterface $entityManager,
-        protected NormalizerInterface $normalizer,
-        protected FileRepository $repository,
-    ) {
+        protected NormalizerInterface    $normalizer,
+        protected FileRepository         $repository,
+    )
+    {
     }
 
     #[Route('/upload', name: 'file_storage_upload', methods: 'POST')]
@@ -57,8 +59,9 @@ class FileStorageController extends AbstractController
     #[Route('s', name: 'file_storage_index', methods: 'GET')]
     public function index(): JsonResponse
     {
+        $pagination = new QueryBuilderPaginator($this->repository->search());
 
-        return $this->json([]);
+        return $this->json($this->normalizer->normalize($pagination));
     }
 
     #[Route('/{file}/delete', name: 'file_storage_delete', methods: 'DELETE')]

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait ApiTestProvider
 {
-    protected KernelBrowser $client;
+    protected ?KernelBrowser $client = null;
 
     protected const FILE1 = 'file1.txt';
     protected const FILE2 = 'file2.txt';
@@ -34,7 +34,9 @@ trait ApiTestProvider
 
     protected function request(string $method, string $uri, array $parameters = [], array $files = [], array $server = [], string $content = null, bool $changeHistory = true): ?array
     {
-        $this->getClient();
+        if (!$this->client) {
+            $this->getClient();
+        }
 
         $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
 
