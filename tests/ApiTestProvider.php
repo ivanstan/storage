@@ -32,7 +32,7 @@ trait ApiTestProvider
         return $this->client;
     }
 
-    protected function request(string $method, string $uri, array $parameters = [], array $files = [], array $server = [], string $content = null, bool $changeHistory = true): array
+    protected function request(string $method, string $uri, array $parameters = [], array $files = [], array $server = [], string $content = null, bool $changeHistory = true): ?array
     {
         $this->getClient();
 
