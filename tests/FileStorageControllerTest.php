@@ -63,6 +63,16 @@ class FileStorageControllerTest extends WebTestCase
     /**
      * @depends testSearch
      */
+    public function testDownload(array $response): array
+    {
+        $download = $this->request('GET', $response['member'][0]['destination']);
+
+        return $response;
+    }
+
+    /**
+     * @depends testDownload
+     */
     public function testDelete(array $response): void
     {
         foreach ($response['member'] as $item) {

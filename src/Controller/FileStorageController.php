@@ -9,6 +9,7 @@ use Ivanstan\SymfonySupport\Services\QueryBuilderPaginator;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,5 +81,12 @@ class FileStorageController extends AbstractController
         (new Filesystem())->remove($file->getDestination());
 
         return $this->json([], Response::HTTP_ACCEPTED);
+    }
+
+    #[Route('/{file}/download', name: 'file_storage_download', methods: 'GET')]
+    #[OA\Get(tags: ['File'])]
+    public function get(File $file): BinaryFileResponse
+    {
+        return $this->file($file->getDestination(), $file->getName());
     }
 }
