@@ -1477,12 +1477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ivanstan/symfony-support.git",
-                "reference": "6a2abcd75f3aed5ad44bfda11e1533d0e342aac1"
+                "reference": "efee98512deb618af2d8a8901f5d4df721fcfa4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ivanstan/symfony-support/zipball/6a2abcd75f3aed5ad44bfda11e1533d0e342aac1",
-                "reference": "6a2abcd75f3aed5ad44bfda11e1533d0e342aac1",
+                "url": "https://api.github.com/repos/ivanstan/symfony-support/zipball/efee98512deb618af2d8a8901f5d4df721fcfa4f",
+                "reference": "efee98512deb618af2d8a8901f5d4df721fcfa4f",
                 "shasum": ""
             },
             "require": {
@@ -1519,7 +1519,7 @@
                 "issues": "https://github.com/ivanstan/symfony-support/issues",
                 "source": "https://github.com/ivanstan/symfony-support/tree/master"
             },
-            "time": "2022-02-15T16:11:33+00:00"
+            "time": "2023-02-28T15:18:22+00:00"
         },
         {
             "name": "laminas/laminas-code",

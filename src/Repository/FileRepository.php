@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\File;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @extends ServiceEntityRepository<File>
@@ -34,6 +36,7 @@ class FileRepository extends ServiceEntityRepository
     public function remove(File $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
+        (new Filesystem())->remove($entity->getDestination());
 
         if ($flush) {
             $this->getEntityManager()->flush();
@@ -43,7 +46,7 @@ class FileRepository extends ServiceEntityRepository
     public function search(): QueryBuilder
     {
         return $this->createQueryBuilder('f')
-            ->orderBy('f.created_at', 'DESC');
+            ->orderBy('f.created_at', Criteria::DESC);
     }
 
     public function findOneBySha256($value): ?File

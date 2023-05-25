@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
@@ -37,9 +39,13 @@ class File
     #[ORM\Column(length: 255)]
     private ?string $sha256 = null;
 
+    #[ORM\ManyToMany(targetEntity: Node::class, mappedBy: 'files')]
+    private Collection $nodes;
+
     public function __construct(?Uuid $id = null)
     {
         $this->id = $id ?? Uuid::v4();
+        $this->nodes = new ArrayCollection();
     }
 
     public static function fromUploadedFile(UploadedFile $file): self
@@ -142,6 +148,33 @@ class File
     public function setSha256(string $sha256): self
     {
         $this->sha256 = $sha256;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Node>
+     */
+    public function getNodes(): Collection
+    {
+        return $this->nodes;
+    }
+
+    public function addNode(Node $node): self
+    {
+        if (!$this->nodes->contains($node)) {
+            $this->nodes->add($node);
+            $node->addFile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNode(Node $node): self
+    {
+        if ($this->nodes->removeElement($node)) {
+            $node->removeFile($this);
+        }
 
         return $this;
     }

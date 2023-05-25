@@ -6,7 +6,6 @@ use App\Entity\File;
 use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Ivanstan\SymfonySupport\Services\QueryBuilderPaginator;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -20,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 use OpenApi\Attributes as OA;
 
 #[Route('/api/file')]
-class FileStorageController extends AbstractController
+class FileController extends AbstractController
 {
     public function __construct(
         protected string                 $publicDir,
@@ -78,7 +77,6 @@ class FileStorageController extends AbstractController
     public function delete(File $file): JsonResponse
     {
         $this->repository->remove($file, true);
-        (new Filesystem())->remove($file->getDestination());
 
         return $this->json([], Response::HTTP_ACCEPTED);
     }

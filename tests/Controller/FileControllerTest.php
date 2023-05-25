@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
+use App\Tests\Provider\ApiTestProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class FileStorageControllerTest extends WebTestCase
+class FileControllerTest extends WebTestCase
 {
     use ApiTestProvider;
 
