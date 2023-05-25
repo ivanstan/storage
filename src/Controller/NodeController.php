@@ -65,14 +65,14 @@ class NodeController extends AbstractApiController
     {
         $data = json_decode($request->getContent(), true);
 
-        $node->fill($data);
+        $node = $node->fill($data);
 
         $errors = $this->validator->validate($node);
 
         if (count($errors) === 0) {
             $this->entityManager->flush();
 
-            return $this->json($response);
+            return $this->json($node);
         }
 
         return $this->json(['errors' => $this->getErrorsAsArray($errors)], Response::HTTP_BAD_REQUEST);

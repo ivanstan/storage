@@ -21,12 +21,12 @@ class FileControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
 
-        self::assertFileExists(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');
+        self::assertFileExists(__DIR__ . '/../../public/data/' . $response[0]['id'] . '.txt');
         self::assertEquals('file1.txt', $response[0]['name']);
         self::assertEquals(18, $response[0]['size']);
         self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
 
-        self::assertFileExists(__DIR__ . '/../public/data/' . $response[1]['id'] . '.txt');
+        self::assertFileExists(__DIR__ . '/../../public/data/' . $response[1]['id'] . '.txt');
         self::assertEquals('file2.txt', $response[1]['name']);
         self::assertEquals(18, $response[1]['size']);
         self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
@@ -41,7 +41,7 @@ class FileControllerTest extends WebTestCase
             'file' => [$this->getFile(self::FILE1)],
         ]);
 
-        self::assertFileExists(__DIR__ . '/../public/data/' . $response[0]['id'] . '.txt');
+        self::assertFileExists(__DIR__ . '/../../public/data/' . $response[0]['id'] . '.txt');
         self::assertEquals('file1.txt', $response[0]['name']);
         self::assertEquals(18, $response[0]['size']);
         self::assertEquals('3f482a35ebe566c18436aedacac93da358a2ff31829851db485bf84c775f761f', $response[0]['sha256']);
@@ -80,7 +80,7 @@ class FileControllerTest extends WebTestCase
             $this->request('DELETE', '/api/file/' . $item['id'] . '/delete');
 
             self::assertEquals(Response::HTTP_ACCEPTED, $this->client->getResponse()->getStatusCode());
-            self::assertFileDoesNotExist(__DIR__ . '/../public/data/' . $item['id'] . '.txt');
+            self::assertFileDoesNotExist(__DIR__ . '/../../public/data/' . $item['id'] . '.txt');
         }
     }
 }

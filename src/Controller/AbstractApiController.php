@@ -8,11 +8,11 @@ class AbstractApiController extends AbstractController
 {
     protected function getErrorsAsArray($errors): array
     {
-        $errorsArray = [];
+        $result = [];
         foreach ($errors as $error) {
-            $errorsArray[] = $error->getMessage();
+            $result[] = $error->getMessage();
         }
 
-        return $errorsArray;
+        return $result;
     }
 }

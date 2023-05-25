@@ -18,7 +18,7 @@ class Node
     private ?Uuid $id;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private ?string $data = null;
+    private ?array $data = null;
 
     #[ORM\ManyToMany(targetEntity: File::class, inversedBy: 'nodes', cascade: ['persist'])]
     private Collection $files;
@@ -49,12 +49,12 @@ class Node
         return $this->id;
     }
 
-    public function getData(): ?string
+    public function getData(): ?array
     {
         return $this->data;
     }
 
-    public function setData(?string $data): self
+    public function setData(?array $data): self
     {
         $this->data = $data;
 

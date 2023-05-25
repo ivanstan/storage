@@ -21,7 +21,7 @@ class NodeControllerTest extends WebTestCase
     /**
      * @depends testNodeList
      */
-    public function testCreateNode(): void
+    public function testCreateNode(): array
     {
         $data = [
             'data' => [
@@ -29,81 +29,45 @@ class NodeControllerTest extends WebTestCase
             ],
         ];
 
-        $this->client->request('POST', '/api/nodes', [], [], [], json_encode($data));
+        $response = $this->request('POST', '/api/node', [], [], [], json_encode($data));
 
         $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
+        $this->assertArrayHasKey('id', $response);
+        $this->arrayHasKey('files', $response);
+        $this->assertEquals($data['data'], $response['data']);
+        $this->assertEquals('Node', $response['@type']);
 
-        // Additional assertions for created node data
-        $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('id', $responseData);
-        $this->assertEquals($data['title'], $responseData['title']);
-        $this->assertEquals($data['body'], $responseData['body']);
+        return $response;
     }
 
     /**
      * @depends testCreateNode
      */
-    public function testUpdateNode(): void
+    public function testUpdateNode(array $data): array
     {
-        $data = [
+        $payload = [
             'data' => [
                 'test' => 456,
             ],
         ];
 
-        $createdNode = $this->getNodeByTitle('Test Node');
-        $this->client->request('PUT', '/api/nodes/' . $createdNode['id'], [], [], [], json_encode($data));
+        $response = $this->request('PUT', '/api/node/' . $data['id'], [], [], [], json_encode($payload));
 
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertJson($this->client->getResponse()->getContent());
+        $this->assertEquals($response['data'], $payload['data']);
 
-        // Additional assertions for updated node data
-        $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($data['title'], $responseData['title']);
-        $this->assertEquals($data['body'], $responseData['body']);
+        return $response;
     }
 
     /**
-     * @depends testCreateNode
+     * @depends testUpdateNode
      */
-    public function testDeleteNode(): void
+    public function testDeleteNode(array $data): void
     {
-        $createdNode = $this->getNodeByTitle('Test Node');
-        $this->client->request('DELETE', '/api/nodes/' . $createdNode['id']);
+        $this->request('DELETE', '/api/node/' . $data['id']);
 
         $this->assertEquals(Response::HTTP_NO_CONTENT, $this->client->getResponse()->getStatusCode());
-    }
-
-    private function getNodeByTitle(string $title): ?array
-    {
-        $response = $this->client->request('GET', '/api/nodes');
-        $nodes = json_decode($response->getContent(), true);
-
-        foreach ($nodes as $node) {
-            if ($node['title'] === $title) {
-                return $node;
-            }
-        }
-
-        return null;
-    }
-
-    public function testCreateNodeValidationFailure(): void
-    {
-        $data = [
-            // Missing 'title' field
-            'body' => 'Lorem ipsum dolor sit amet',
-        ];
-
-        $this->client->request('POST', '/api/nodes', [], [], [], json_encode($data));
-
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $this->client->getResponse()->getStatusCode());
-        $this->assertJson($this->client->getResponse()->getContent());
-
-        $responseData = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertCount(1, $responseData['errors']);
-        $this->assertArrayHasKey('title', $responseData['errors']);
     }
 }

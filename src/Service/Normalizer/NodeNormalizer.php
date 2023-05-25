@@ -15,7 +15,7 @@ class NodeNormalizer implements NormalizerInterface
         return [
             'id' => $object->getId(),
             '@type' => 'Node',
-            'content' => $object->getData(),
+            'data' => $object->getData(),
             'files' => $object->getFiles(),
         ];
     }
