@@ -20,16 +20,6 @@ class NodeNormalizer implements NormalizerInterface
         ];
     }
 
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
-    {
-
-    }
-
-    public function supportsDenormalization(mixed $data, string $type, string $format = null)
-    {
-        return $type === Node::class;
-    }
-
     public function supportsNormalization(mixed $data, string $format = null)
     {
         return $data instanceof Node;

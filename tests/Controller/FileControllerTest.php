@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Tests\Provider\ApiTestProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use function PHPUnit\Framework\assertEquals;
 
 class FileControllerTest extends WebTestCase
 {
@@ -66,7 +67,10 @@ class FileControllerTest extends WebTestCase
      */
     public function testDownload(array $response): array
     {
-        $download = $this->request('GET', $response['member'][0]['destination']);
+        $this->client = $this->getClient();
+        $this->client->request('GET', $response['member'][0]['destination']);
+
+        assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         return $response;
     }
