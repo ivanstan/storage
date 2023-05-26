@@ -29,21 +29,6 @@ class Node
         $this->files = new ArrayCollection();
     }
 
-    public static function fromArray(array $data): self
-    {
-        $node = new Node();
-        $node->fill($data);
-
-        return $node;
-    }
-
-    public function fill(array $data): self
-    {
-        $this->setData($data['data']);
-
-        return $this;
-    }
-
     public function getId(): ?Uuid
     {
         return $this->id;

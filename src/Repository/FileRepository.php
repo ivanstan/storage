@@ -43,10 +43,18 @@ class FileRepository extends ServiceEntityRepository
         }
     }
 
-    public function search(): QueryBuilder
+    public function search($filters = []): QueryBuilder
     {
-        return $this->createQueryBuilder('f')
+        $builder = $this->createQueryBuilder('f')
+            ->select('f')
+            ->leftJoin('f.nodes', 'n')
             ->orderBy('f.created_at', Criteria::DESC);
+
+        if (isset($filters['nodes']) && ($filters['nodes'] === 'null')) {
+            $builder->where($builder->expr()->isNull('n.id'));
+        }
+
+        return $builder;
     }
 
     public function findOneBySha256($value): ?File

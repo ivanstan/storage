@@ -10,20 +10,7 @@ trait ApiTestProvider
     protected const FILE1 = 'file1.txt';
     protected const FILE2 = 'file2.txt';
 
-    private ?TestDataProvider $provider = null;
-
     protected ?KernelBrowser $client = null;
-
-    protected function getProvider(): TestDataProvider
-    {
-        if ($this->provider !== null) {
-            return $this->provider;
-        }
-
-        $this->provider = new TestDataProvider($this->getContainer()->get('doctrine.orm.entity_manager'));
-
-        return $this->provider;
-    }
 
     protected function getFile($file): UploadedFile
     {
@@ -35,6 +22,10 @@ trait ApiTestProvider
 
     protected function getClient()
     {
+        if ($this->client) {
+            return $this->client;
+        }
+
         $server = [
             'PHP_AUTH_USER' => 'system',
             'PHP_AUTH_PW' => 'system',

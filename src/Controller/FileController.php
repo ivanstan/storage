@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\File;
 use App\Repository\FileRepository;
+use App\Request\FileListRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Ivanstan\SymfonySupport\Services\QueryBuilderPaginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,13 +31,13 @@ class FileController extends AbstractController
     {
     }
 
-    #[Route('s', name: 'file_storage_index', methods: 'GET')]
+    #[Route('s', name: 'file_storage_list', methods: 'GET')]
     #[OA\Get(tags: ['File'])]
-    public function index(): JsonResponse
+    public function list(FileListRequest $request): JsonResponse
     {
-        $pagination = new QueryBuilderPaginator($this->repository->search());
+        $pagination = new QueryBuilderPaginator($this->repository->search($request->getFilters()));
 
-        return $this->json($this->normalizer->normalize($pagination));
+        return $this->json($pagination);
     }
 
     #[Route('/upload', name: 'file_storage_upload', methods: 'POST')]
@@ -69,7 +70,7 @@ class FileController extends AbstractController
 
         $this->entityManager->flush();
 
-        return new JsonResponse($this->normalizer->normalize($entities));
+        return $this->json($entities);
     }
 
     #[Route('/{file}/delete', name: 'file_storage_delete', methods: 'DELETE')]
@@ -78,7 +79,7 @@ class FileController extends AbstractController
     {
         $this->repository->remove($file, true);
 
-        return $this->json([], Response::HTTP_ACCEPTED);
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     #[Route('/{file}/download', name: 'file_storage_download', methods: 'GET')]

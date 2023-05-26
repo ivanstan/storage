@@ -31,7 +31,7 @@ class NodeRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Node $entity, bool $flush = true): void
+    public function remove(Node $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,8 +40,16 @@ class NodeRepository extends ServiceEntityRepository
         }
     }
 
-    public function search(): QueryBuilder
+    public function search(array $filters = []): QueryBuilder
     {
-        return $this->createQueryBuilder('n');
+        $builder = $this->createQueryBuilder('n')
+            ->select('n')
+            ->leftJoin('n.files', 'f');
+
+        if (isset($filters['files']) && ($filters['files'] === 'null')) {
+            $builder->where($builder->expr()->isNull('f.id'));
+        }
+
+        return $builder;
     }
 }

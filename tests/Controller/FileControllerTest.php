@@ -3,17 +3,23 @@
 namespace App\Tests\Controller;
 
 use App\Tests\Provider\ApiTestProvider;
+use App\Tests\Provider\TestDataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function PHPUnit\Framework\assertEquals;
 
 class FileControllerTest extends WebTestCase
 {
     use ApiTestProvider;
+    use TestDataProvider;
 
+    /**
+     * @covers \App\Controller\FileController::upload
+     */
     public function testUpload(): void
     {
-        $response = $this->request('POST', '/api/file/upload', [], [
+        $response = $this->request(Request::METHOD_POST, '/api/file/upload', [], [
             'file' => [
                 $this->getFile(self::FILE1),
                 $this->getFile(self::FILE2)
@@ -34,11 +40,12 @@ class FileControllerTest extends WebTestCase
     }
 
     /**
+     * @covers \App\Controller\FileController::upload
      * @depends testUpload
      */
     public function testUploadExisting(): array
     {
-        $response = $this->request('POST', '/api/file/upload', [], [
+        $response = $this->request(Request::METHOD_POST, '/api/file/upload', [], [
             'file' => [$this->getFile(self::FILE1)],
         ]);
 
@@ -51,11 +58,12 @@ class FileControllerTest extends WebTestCase
     }
 
     /**
+     * @covers \App\Controller\FileController::list
      * @depends testUploadExisting
      */
     public function testSearch(): array
     {
-        $response = $this->request('GET', '/api/files');
+        $response = $this->request(Request::METHOD_GET, '/api/files');
 
         self::assertEquals(2, $response['totalItems']);
 
@@ -63,12 +71,13 @@ class FileControllerTest extends WebTestCase
     }
 
     /**
+     * @covers \App\Controller\FileController::get
      * @depends testSearch
      */
     public function testDownload(array $response): array
     {
         $this->client = $this->getClient();
-        $this->client->request('GET', $response['member'][0]['destination']);
+        $this->client->request(Request::METHOD_GET, $response['member'][0]['destination']);
 
         assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
@@ -76,15 +85,35 @@ class FileControllerTest extends WebTestCase
     }
 
     /**
+     * @covers \App\Controller\FileController::delete
      * @depends testDownload
      */
     public function testDelete(array $response): void
     {
         foreach ($response['member'] as $item) {
-            $this->request('DELETE', '/api/file/' . $item['id'] . '/delete');
+            $this->request(Request::METHOD_DELETE, '/api/file/' . $item['id'] . '/delete');
 
             self::assertEquals(Response::HTTP_ACCEPTED, $this->client->getResponse()->getStatusCode());
             self::assertFileDoesNotExist(__DIR__ . '/../../public/data/' . $item['id'] . '.txt');
         }
+    }
+
+    /**
+     * @covers \App\Controller\FileController::list
+     */
+    public function testFilesWithoutFiles(): void
+    {
+        $file = $this->createFile();
+        $this->createNode(
+            $this->createFile()
+        );
+
+        $response = $this->request(Request::METHOD_GET, '/api/files?nodes=null');
+
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertJson($this->client->getResponse()->getContent());
+        static::assertCount(1, $response['member']);
+
+        $this->deleteEntity($file);
     }
 }

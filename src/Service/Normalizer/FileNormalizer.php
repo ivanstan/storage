@@ -15,7 +15,7 @@ class FileNormalizer implements NormalizerInterface
     /**
      * @param File $object
      */
-    public function normalize(mixed $object, string $format = null, array $context = [])
+    public function normalize(mixed $object, string $format = null, array $context = []): array
     {
         return [
             '@id' => $object->getId(),
@@ -35,7 +35,7 @@ class FileNormalizer implements NormalizerInterface
         ];
     }
 
-    public function supportsNormalization(mixed $data, string $format = null)
+    public function supportsNormalization(mixed $data, string $format = null): bool
     {
         return $data instanceof File;
     }
