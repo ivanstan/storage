@@ -16,6 +16,9 @@ class NodeControllerTest extends WebTestCase
     use ApiTestProvider;
     use TestDataProvider;
 
+    /**
+     * @covers \App\Controller\NodeController::list
+     */
     public function testList(): void
     {
         $this->request(Request::METHOD_GET, '/api/nodes');
@@ -24,6 +27,9 @@ class NodeControllerTest extends WebTestCase
         static::assertJson($this->client->getResponse()->getContent());
     }
 
+    /**
+     * @covers \App\Controller\NodeController::create
+     */
     public function testInvalidJsonPayload(): void
     {
         $this->request(Request::METHOD_POST, '/api/node', content: '{');
@@ -32,6 +38,7 @@ class NodeControllerTest extends WebTestCase
 
     /**
      * @depends testList
+     * @covers \App\Controller\NodeController::create
      */
     public function testCreate(): array
     {
@@ -55,6 +62,7 @@ class NodeControllerTest extends WebTestCase
 
     /**
      * @depends testCreate
+     * @covers \App\Controller\NodeController::update
      */
     public function testUpdate(array $data): array
     {
@@ -78,6 +86,9 @@ class NodeControllerTest extends WebTestCase
         return $response;
     }
 
+    /**
+     * @covers \App\Controller\NodeController::create
+     */
     public function testCreateNodeWithNonExistingFile(): void
     {
         $node = $this->createNode();
@@ -97,6 +108,9 @@ class NodeControllerTest extends WebTestCase
         $this->deleteEntity($node);
     }
 
+    /**
+     * @covers \App\Controller\NodeController::read
+     */
     public function testRead(): void
     {
         $node = $this->createNode(
@@ -112,6 +126,7 @@ class NodeControllerTest extends WebTestCase
 
     /**
      * @depends testUpdate
+     * @covers \App\Controller\NodeController::delete
      */
     public function testDelete(array $data): void
     {
@@ -120,6 +135,9 @@ class NodeControllerTest extends WebTestCase
         static::assertEquals(Response::HTTP_NO_CONTENT, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * @covers \App\Controller\NodeController::list
+     */
     public function testNodesWithoutFiles(): void
     {
         $this->createNode();
