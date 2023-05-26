@@ -4,11 +4,9 @@ namespace App\Tests\Controller;
 
 use App\Tests\Provider\ApiTestProvider;
 use App\Tests\Provider\TestDataProvider;
-use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Uid\Uuid;
 
 class NodeControllerTest extends WebTestCase
