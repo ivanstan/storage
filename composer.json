@@ -10,6 +10,7 @@
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
+        "guzzlehttp/guzzle": "^7.7",
         "ivanstan/symfony-support": "dev-master",
         "nelmio/api-doc-bundle": "^4.11",
         "symfony/apache-pack": "^1.0",
